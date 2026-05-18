@@ -14,7 +14,6 @@ namespace Console.App
         {
             repository.createUser(createUser);
 
-
             userSubject.Notify(new UserCratedEvent(1, "ahmet16", "ahmet16@example.com"));
             //Observer Design Pattern
             //Mediator Design Pattern (MediatR Library)
