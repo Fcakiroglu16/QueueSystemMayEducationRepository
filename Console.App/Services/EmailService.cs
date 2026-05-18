@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Console.App.ObserverDesignPattern;
+﻿using Console.App.ObserverDesignPattern;
 
 namespace Console.App.Services
 {
     internal class EmailService : IEmailService, IUserObserver
     {
-        public void send()
+        public void Send()
         {
             throw new NotImplementedException();
         }
 
-        public void Send(UserCratedEvent userCratedEvent)
+        public void Send(UserCreatedEvent userCreatedEvent)
         {
             System.Console.WriteLine(
-                $"Email :User Created: {userCratedEvent.UserName}, Email: {userCratedEvent.Email}");
+                $"Email :User Created: {userCreatedEvent.UserName}, Email: {userCreatedEvent.Email}");
         }
     }
 }

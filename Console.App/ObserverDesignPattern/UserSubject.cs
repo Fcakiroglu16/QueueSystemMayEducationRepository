@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Console.App.ObserverDesignPattern
+﻿namespace Console.App.ObserverDesignPattern
 {
-    public interface IUserObserver
-    {
-        void Send(UserCratedEvent userCratedEvent);
-    }
-
-
     internal class UserSubject
     {
         private readonly List<IUserObserver> _observers = new();
 
-        public void Notify(UserCratedEvent userCratedEvent)
+        public void Notify(UserCreatedEvent userCreatedEvent)
         {
             foreach (var observer in _observers)
             {
-                observer.Send(userCratedEvent);
+                observer.Send(userCreatedEvent);
             }
         }
 
