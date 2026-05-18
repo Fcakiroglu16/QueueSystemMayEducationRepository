@@ -2,5 +2,5 @@
 
 internal interface IDiscountService
 {
-    void discount();
+    void Discount();
 }

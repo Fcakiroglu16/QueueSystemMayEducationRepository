@@ -2,5 +2,5 @@
 
 internal interface IEmailService
 {
-    void send();
+    void Send();
 }

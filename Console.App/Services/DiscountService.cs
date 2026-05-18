@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Console.App.ObserverDesignPattern;
+﻿using Console.App.ObserverDesignPattern;
 
 namespace Console.App.Services
 {
     internal class DiscountService : IDiscountService, IUserObserver
     {
-        public void discount()
+        public void Discount()
         {
             throw new NotImplementedException();
         }
 
-        public void Send(UserCratedEvent userCratedEvent)
+        public void Send(UserCreatedEvent userCreatedEvent)
         {
             System.Console.WriteLine(
-                $"Discount :User Created: {userCratedEvent.UserName}, Email: {userCratedEvent.Email}");
+                $"Discount :User Created: {userCreatedEvent.UserName}, Email: {userCreatedEvent.Email}");
         }
     }
 }

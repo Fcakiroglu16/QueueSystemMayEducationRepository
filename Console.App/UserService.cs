@@ -1,8 +1,4 @@
-﻿using Console.App.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Console.App.ObserverDesignPattern;
+﻿using Console.App.ObserverDesignPattern;
 
 namespace Console.App
 {
@@ -12,25 +8,22 @@ namespace Console.App
     {
         internal void CreateUser(CreateUser createUser)
         {
-            repository.createUser(createUser);
+            repository.CreateUser(createUser);
 
-
-            userSubject.Notify(new UserCratedEvent(1, "ahmet16", "ahmet16@example.com"));
-            //Observer Design Pattern
-            //Mediator Design Pattern (MediatR Library)
+            userSubject.Notify(new UserCreatedEvent(1, createUser.userName, createUser.email));
         }
     }
 
     internal interface IUserRepository
     {
-        void createUser(CreateUser createUser1);
+        void CreateUser(CreateUser createUser);
     }
 
     public class UserRepository : IUserRepository
     {
-        public void createUser(CreateUser createUser1)
+        public void CreateUser(CreateUser createUser)
         {
-            System.Console.WriteLine($"User Created: {createUser1.userName}, Email: {createUser1.email}");
+            System.Console.WriteLine($"User Created: {createUser.userName}, Email: {createUser.email}");
         }
     }
 }
