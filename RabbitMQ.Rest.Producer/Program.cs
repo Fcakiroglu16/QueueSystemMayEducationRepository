@@ -35,7 +35,7 @@ app.UseHttpsRedirection();
 
 app.MapGet("send-message-with-no-ack", async (RabbitMqService rabbitMqService) =>
 {
-    await rabbitMqService.Publish(new UserCreatedEvent(1, "ahmet16", "ahmet16@outlook.com"), Ack.No);
+    await rabbitMqService.PublishAsDirectExchange(new UserCreatedEvent(1, "ahmet16", "ahmet16@outlook.com"), Ack.Yes);
     return Results.Ok("Message sent");
 });
 

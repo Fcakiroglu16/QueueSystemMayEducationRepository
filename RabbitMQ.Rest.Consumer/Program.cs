@@ -15,7 +15,8 @@ builder.Services.AddSingleton<IConnection>(sp =>
     return factory.CreateConnectionAsync().Result;
 });
 
-builder.Services.AddHostedService<UserCreatedEventConsumer>();
+//builder.Services.AddHostedService<UserCreatedEventConsumer>();
+builder.Services.AddHostedService<UserCreatedEventConsumerDirectExchange>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
