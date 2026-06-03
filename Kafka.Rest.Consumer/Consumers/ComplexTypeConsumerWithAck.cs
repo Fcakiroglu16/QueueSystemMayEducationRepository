@@ -1,9 +1,9 @@
 ﻿using Confluent.Kafka;
-using Confluent.Kafka;
+using Shared.Kafka;
 
 namespace Kafka.Rest.Consumer.Consumers
 {
-    public class SimpleTypeConsumer(ILogger<SimpleTypeConsumer> logger) : BackgroundService
+    public class ComplexTypeConsumerWithAck(ILogger<ComplexTypeConsumerWithAck> logger) : BackgroundService
     {
         private ConsumerConfig consumerConfig;
 
@@ -15,6 +15,7 @@ namespace Kafka.Rest.Consumer.Consumers
                 BootstrapServers = "localhost:9094",
                 GroupId = "kafka-rest-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
+                EnableAutoCommit = false // disable auto-commit for manual acknowledgment
             };
 
 
@@ -29,17 +30,27 @@ namespace Kafka.Rest.Consumer.Consumers
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-            consumer.Subscribe("my-topic");
+            var consumer = new ConsumerBuilder<int, UserCreatedEvent>(consumerConfig)
+                .SetValueDeserializer(new ValueDeserializer<UserCreatedEvent>()).Build();
+            consumer.Subscribe("user.created.event-topic");
             while (!stoppingToken.IsCancellationRequested)
             {
+                var result = consumer.Consume(TimeSpan.FromSeconds(5));
                 try
                 {
-                    var result = consumer.Consume(stoppingToken);
+                    if (result is null)
+                    {
+                        continue;
+                    }
+
+                    var userCreatedEvent = result.Message.Value;
+
+                    // add log message
+
+                    logger.LogInformation("Consumed message: {UserCreatedEvent}", userCreatedEvent.UserName);
 
 
-                    Console.WriteLine(
-                        $"Received message: {result.Message.Value} from partition {result.Partition} with offset {result.Offset}");
+                    consumer.Commit(result);
                 }
                 catch (Exception ex)
                 {

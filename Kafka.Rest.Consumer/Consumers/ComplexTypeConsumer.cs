@@ -1,9 +1,10 @@
-﻿using Confluent.Kafka;
+﻿using System.Text;
 using Confluent.Kafka;
+using Shared.Kafka;
 
 namespace Kafka.Rest.Consumer.Consumers
 {
-    public class SimpleTypeConsumer(ILogger<SimpleTypeConsumer> logger) : BackgroundService
+    public class ComplexTypeConsumer(ILogger<ComplexTypeConsumer> logger) : BackgroundService
     {
         private ConsumerConfig consumerConfig;
 
@@ -29,17 +30,33 @@ namespace Kafka.Rest.Consumer.Consumers
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-            consumer.Subscribe("my-topic");
+            var consumer = new ConsumerBuilder<int, UserCreatedEvent>(consumerConfig)
+                .SetValueDeserializer(new ValueDeserializer<UserCreatedEvent>()).Build();
+            consumer.Subscribe("user.created.event-topic");
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    var result = consumer.Consume(stoppingToken);
+                    var result = consumer.Consume(TimeSpan.FromSeconds(5));
 
 
-                    Console.WriteLine(
-                        $"Received message: {result.Message.Value} from partition {result.Partition} with offset {result.Offset}");
+                    if (result.Message.Headers.TryGetLastBytes("idempotency-key", out var idempotencyKeyBytes))
+                    {
+                        var idempotencyKey = Encoding.UTF8.GetString(idempotencyKeyBytes);
+                        // Use the idempotencyKey as needed
+                        continue;
+                    }
+
+                    if (result is null)
+                    {
+                        continue;
+                    }
+
+                    var userCreatedEvent = result.Message.Value;
+
+                    // add log message
+
+                    logger.LogInformation("Consumed message: {UserCreatedEvent}", userCreatedEvent.UserName);
                 }
                 catch (Exception ex)
                 {
