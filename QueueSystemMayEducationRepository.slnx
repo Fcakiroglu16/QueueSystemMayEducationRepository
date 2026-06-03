@@ -1,7 +1,8 @@
 <Solution>
-  <Project Path="Console.App/Console.App.csproj" />
-  <Project Path="RabbitMQ.Rest.Consumer/RabbitMQ.Rest.Consumer.csproj" Id="62d97b1a-d77e-41ef-8095-23ed4f285395" />
-  <Project Path="RabbitMQ.Rest.Producer/RabbitMQ.Rest.Producer.csproj" Id="a2fab797-d572-4b5b-a0aa-f9b362318edc" />
-  <Project Path="ServiceBus.Shared/ServiceBus.Shared.csproj" Id="f1519f05-7c5b-4fe6-bb4c-815240231e63" />
-  <Project Path="WorkerService.Email/WorkerService.Email.csproj" Id="d28cdafd-fd5f-4416-b6d6-aad7cb36d094" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="Kafka.Rest.Consumer/Kafka.Rest.Consumer.csproj" Id="83ed5bcd-52af-4d40-a803-edc7f3cc9cb0" />
+  <Project Path="Kafka.Rest.Producer/Kafka.Rest.Producer.csproj" Id="89d0c5aa-7d13-428c-adaf-74a63456b994" />
+  <Project Path="Shared.Kafka/Shared.Kafka.csproj" Id="32f24339-4c36-40c7-bab6-2c89e4933f41" />
 </Solution>
