@@ -1,6 +1,9 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
+using Kafka.Rest.Producer.Events;
 using Shared.Kafka;
 
 namespace Kafka.Rest.Producer.Serrvices
@@ -77,21 +80,35 @@ namespace Kafka.Rest.Producer.Serrvices
                 BootstrapServers = "localhost:9094"
             };
 
-            using var producer = new ProducerBuilder<int, UserCreatedEvent>(config)
-                .SetValueSerializer(new ValueSerializer<UserCreatedEvent>()).Build();
+            //schema
+            var schemaRegistryConfig = new SchemaRegistryConfig()
+            {
+                Url = "http://localhost:8081"
+            };
+
+
+            var schemaRegistryClient = new CachedSchemaRegistryClient(schemaRegistryConfig);
+
+            using var producer = new ProducerBuilder<string, OrderCreatedEvent>(config)
+                .SetValueSerializer(new AvroSerializer<OrderCreatedEvent>(schemaRegistryClient)).Build();
 
             try
             {
-                var userCreatedEvent = new UserCreatedEvent(10, "ahmet", "ahmet@outlook.com");
+                var orderCreatedEvent = new OrderCreatedEvent()
+                {
+                    CustomerId = "abc123",
+                    Description = 1,
+                    OrderId = Guid.NewGuid().ToString(),
+                };
                 var message =
-                    new Message<int, UserCreatedEvent>
+                    new Message<string, OrderCreatedEvent>
                     {
-                        Value = userCreatedEvent,
+                        Value = orderCreatedEvent,
                         Headers = new Headers
                         {
                             { "idempotency-key", Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()) }
                         },
-                        Key = userCreatedEvent.Id
+                        Key = orderCreatedEvent.OrderId
                     };
                 var result =
                     await producer.ProduceAsync(TopicName, message);
@@ -231,6 +248,58 @@ namespace Kafka.Rest.Producer.Serrvices
                 }
             }
             catch (ProduceException<int, UserCreatedEvent> ex)
+            {
+                Console.WriteLine($"An error occurred producing message: {ex.Error.Reason}");
+            }
+        }
+
+
+        public async Task SendAtMostOnceComplexWithSpecificPartitionMessage()
+        {
+            var config = new ProducerConfig
+            {
+                BootstrapServers = "localhost:9094"
+            };
+
+            //schema
+            var schemaRegistryConfig = new SchemaRegistryConfig()
+            {
+                Url = "http://localhost:8081"
+            };
+
+
+            var schemaRegistryClient = new CachedSchemaRegistryClient(schemaRegistryConfig);
+
+            using var producer = new ProducerBuilder<string, OrderCreatedEvent>(config)
+                .SetValueSerializer(new AvroSerializer<OrderCreatedEvent>(schemaRegistryClient)).Build();
+
+            try
+            {
+                var orderCreatedEvent = new OrderCreatedEvent()
+                {
+                    CustomerId = "abc123",
+                    Description = 1,
+                    OrderId = Guid.NewGuid().ToString(),
+                };
+                var message =
+                    new Message<string, OrderCreatedEvent>
+                    {
+                        Value = orderCreatedEvent,
+                        Headers = new Headers
+                        {
+                            { "idempotency-key", Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()) }
+                        },
+                        Key = orderCreatedEvent.OrderId
+                    };
+
+
+                var topicPartition = new TopicPartition(TopicName, new Partition(1));
+
+                var result =
+                    await producer.ProduceAsync(topicPartition, message);
+                Console.WriteLine($"Message sent to partition {result.Partition} with offset {result.Offset}");
+            }
+            catch (ProduceException<Null, string> ex)
             {
                 Console.WriteLine($"An error occurred producing message: {ex.Error.Reason}");
             }

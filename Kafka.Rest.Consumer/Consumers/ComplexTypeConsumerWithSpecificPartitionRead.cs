@@ -8,7 +8,7 @@ using Kafka.Rest.Producer.Events;
 
 namespace Kafka.Rest.Consumer.Consumers
 {
-    public class ComplexTypeConsumer(ILogger<ComplexTypeConsumer> logger) : BackgroundService
+    public class ComplexTypeConsumerWithSpecificPartitionRead(ILogger<ComplexTypeConsumer> logger) : BackgroundService
     {
         private ConsumerConfig? _consumerConfig;
         private CachedSchemaRegistryClient? _schemaRegistryClient;
@@ -19,7 +19,7 @@ namespace Kafka.Rest.Consumer.Consumers
             _consumerConfig = new ConsumerConfig()
             {
                 BootstrapServers = "localhost:9094",
-                GroupId = "Kafka.Rest.Consumer",
+                GroupId = "Kafka.Rest.Consumer8",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
             };
             //schema
@@ -45,7 +45,15 @@ namespace Kafka.Rest.Consumer.Consumers
             var consumer = new ConsumerBuilder<string, OrderCreatedEvent>(_consumerConfig)
                 .SetValueDeserializer(new AvroDeserializer<OrderCreatedEvent>(_schemaRegistryClient).AsSyncOverAsync())
                 .Build();
-            consumer.Subscribe("order.created.event-topic");
+
+            // var topicPartition = new TopicPartition("order.created.event-topic", new Partition(2));
+
+            var x = new TopicPartitionOffset(new TopicPartition("order.created.event-topic", new Partition(2)),
+                new Offset(1));
+
+            consumer.Assign(x);
+
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
@@ -63,12 +71,11 @@ namespace Kafka.Rest.Consumer.Consumers
                     //    continue;
                     //}
 
-
                     var orderCreatedEvent = result.Message.Value;
 
                     // add log message
 
-                    logger.LogInformation("Consumed message: {OrderCreatedEvent}", orderCreatedEvent.OrderId);
+                    logger.LogInformation("Consumed message: {OrderCreatedEvent}", orderCreatedEvent.CustomerId);
                 }
                 catch (Exception ex)
                 {

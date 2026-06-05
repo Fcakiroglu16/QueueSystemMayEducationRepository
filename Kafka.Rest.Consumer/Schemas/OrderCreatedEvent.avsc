@@ -1,0 +1,20 @@
+{
+  "type": "record",
+  "name": "OrderCreatedEvent",
+  "namespace": "Kafka.Rest.Producer.Events",
+  "fields": [
+    {
+      "name": "OrderId",
+      "type": "string"
+    },
+    {
+      "name": "CustomerId",
+      "type": "string"
+    },
+    {
+      "name": "Description",
+      "type": "int"
+
+    }
+  ]
+}

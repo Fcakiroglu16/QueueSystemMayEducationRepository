@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 //builder.Services.AddHostedService<SimpleTypeConsumer>();
-builder.Services.AddHostedService<ComplexTypeConsumer>();
+builder.Services.AddHostedService<ComplexTypeConsumerWithSpecificPartitionRead>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

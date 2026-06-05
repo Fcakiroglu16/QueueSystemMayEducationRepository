@@ -1,0 +1,1 @@
+﻿dotnet tool install --global Apache.Avro.Tools --version 1.12.1

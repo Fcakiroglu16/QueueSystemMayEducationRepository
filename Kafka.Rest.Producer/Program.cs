@@ -32,7 +32,7 @@ app.MapPost("/api/kafka/send-simple-message", async (KafkaService kafkaService) 
 });
 app.MapPost("/api/kafka/send-complex-message", async (KafkaService kafkaService) =>
 {
-    kafkaService.TopicName = "user.created.event-topic";
+    kafkaService.TopicName = "order.created.event-topic";
     await kafkaService.CreateTopicAsync();
     await kafkaService.SendAtMostOnceComplexMessage();
     return Results.Ok();
