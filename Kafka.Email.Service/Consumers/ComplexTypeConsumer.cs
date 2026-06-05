@@ -1,8 +1,7 @@
-﻿using System.Text;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Shared.Kafka;
 
-namespace Kafka.Rest.Consumer.Consumers
+namespace Kafka.Email.Service.Consumers
 {
     public class ComplexTypeConsumer(ILogger<ComplexTypeConsumer> logger) : BackgroundService
     {
