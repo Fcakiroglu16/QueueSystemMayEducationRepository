@@ -2,8 +2,7 @@
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
-  <Project Path="Kafka.Email.Service/Kafka.Email.Service.csproj" Id="4b17f744-632a-488a-b407-d1cd1f4f655f" />
-  <Project Path="Kafka.Rest.Consumer/Kafka.Rest.Consumer.csproj" Id="83ed5bcd-52af-4d40-a803-edc7f3cc9cb0" />
-  <Project Path="Kafka.Rest.Producer/Kafka.Rest.Producer.csproj" Id="89d0c5aa-7d13-428c-adaf-74a63456b994" />
-  <Project Path="Shared.Kafka/Shared.Kafka.csproj" Id="32f24339-4c36-40c7-bab6-2c89e4933f41" />
+  <Project Path="RabbitMQ.Rest.Producer/RabbitMQ.Rest.Producer.csproj" />
+  <Project Path="Redis.REST.Consumer/Redis.REST.Consumer.csproj" />
+  <Project Path="Redis.Shared/Redis.Shared.csproj" />
 </Solution>
