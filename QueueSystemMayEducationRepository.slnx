@@ -1,8 +1,6 @@
 <Solution>
+  <Project Path="Channels.Rest.API/Channels.Rest.API.csproj" Id="2bcaa1e3-4d64-40ac-a9be-7d407c9d276b" />
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
-  <Project Path="RabbitMQ.Rest.Producer/RabbitMQ.Rest.Producer.csproj" />
-  <Project Path="Redis.REST.Consumer/Redis.REST.Consumer.csproj" />
-  <Project Path="Redis.Shared/Redis.Shared.csproj" />
 </Solution>

@@ -5,6 +5,16 @@ namespace Redis.REST.Consumer.Consumers
 {
     public class UserCreatedEventConsumer(RedisService redisService) : BackgroundService
     {
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            return base.StartAsync(cancellationToken);
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            return base.StopAsync(cancellationToken);
+        }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var subscriber = redisService.Subscriber;
