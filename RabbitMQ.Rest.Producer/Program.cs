@@ -44,7 +44,11 @@ app.MapGet("send-message-with-ack", async (RabbitMqService rabbitMqService) =>
     await rabbitMqService.Publish(new UserCreatedEvent(2, "mehmet16", "mehmet16@outlook.com"), Ack.Yes);
     return Results.Ok("Message sent");
 });
-
+app.MapGet("send-message-to-stream-queue", async (RabbitMqService rabbitMqService) =>
+{
+    await rabbitMqService.PublishStreamQueue(new UserCreatedEvent(2, "mehmet16", "mehmet16@outlook.com"));
+    return Results.Ok("Message sent");
+});
 
 app.Run();
 

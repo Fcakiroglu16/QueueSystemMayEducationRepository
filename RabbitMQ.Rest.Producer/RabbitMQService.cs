@@ -150,5 +150,31 @@ namespace RabbitMQ.Rest.Producer
 
             //ACK=NO
         }
+
+
+        public async Task PublishStreamQueue<T>(T commandOrEvent)
+        {
+            IChannel channel = await connection.CreateChannelAsync(new CreateChannelOptions(true, true));
+
+            var arguments = new Dictionary<string, object>
+            {
+                { "x-queue-type", "stream" }, // Stream queue türü
+            };
+
+            await channel.QueueDeclareAsync("stream-queue", durable: true, exclusive: false, autoDelete: false,
+                arguments!);
+
+
+            var body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(commandOrEvent);
+
+
+            var properties = new BasicProperties
+            {
+                Persistent = true
+            };
+
+
+            await channel.BasicPublishAsync(string.Empty, "stream-queue", false, properties, body);
+        }
     }
 }
